@@ -37,10 +37,20 @@ export default function Tickets() {
         ? await searchTickets(params)
         : await getAllTickets();
       setTickets(res.data);
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => { fetchTickets(); }, []);
+
+  const getPriorityClass = (priority) => {
+    return priorityColors[priority] || 'bg-gray-500/20 text-gray-400';
+  };
+
+  const getStatusClass = (status) => {
+    return statusColors[status] || 'bg-gray-500/20 text-gray-400';
+  };
 
   return (
     <div>
@@ -58,23 +68,37 @@ export default function Tickets() {
       <div className="bg-gray-800 border border-gray-700 rounded-2xl p-4 mb-5 flex flex-wrap gap-3">
         <div className="relative flex-1 min-w-48">
           <FiSearch className="absolute left-3 top-3 text-gray-400" />
-          <input value={search} onChange={e => setSearch(e.target.value)}
+          <input
+            value={search}
+            onChange={e => setSearch(e.target.value)}
             placeholder="Search tickets..."
-            className="w-full pl-9 pr-4 py-2 bg-gray-700 border border-gray-600 rounded-xl text-white text-sm focus:outline-none focus:border-blue-500" />
+            className="w-full pl-9 pr-4 py-2 bg-gray-700 border border-gray-600 rounded-xl text-white text-sm focus:outline-none focus:border-blue-500"
+          />
         </div>
-        <select value={status} onChange={e => setStatus(e.target.value)}
+        <select
+          value={status}
+          onChange={e => setStatus(e.target.value)}
           className="px-4 py-2 bg-gray-700 border border-gray-600 rounded-xl text-white text-sm focus:outline-none">
           <option value="">All Status</option>
-          {['OPEN','IN_PROGRESS','PENDING','RESOLVED','CLOSED','REOPENED'].map(s =>
-            <option key={s} value={s}>{s.replace('_',' ')}</option>)}
+          <option value="OPEN">OPEN</option>
+          <option value="IN_PROGRESS">IN PROGRESS</option>
+          <option value="PENDING">PENDING</option>
+          <option value="RESOLVED">RESOLVED</option>
+          <option value="CLOSED">CLOSED</option>
+          <option value="REOPENED">REOPENED</option>
         </select>
-        <select value={priority} onChange={e => setPriority(e.target.value)}
+        <select
+          value={priority}
+          onChange={e => setPriority(e.target.value)}
           className="px-4 py-2 bg-gray-700 border border-gray-600 rounded-xl text-white text-sm focus:outline-none">
           <option value="">All Priority</option>
-          {['P1_CRITICAL','P2_HIGH','P3_MEDIUM','P4_LOW'].map(p =>
-            <option key={p} value={p}>{p.replace('_',' ')}</option>)}
+          <option value="P1_CRITICAL">P1 CRITICAL</option>
+          <option value="P2_HIGH">P2 HIGH</option>
+          <option value="P3_MEDIUM">P3 MEDIUM</option>
+          <option value="P4_LOW">P4 LOW</option>
         </select>
-        <button onClick={fetchTickets}
+        <button
+          onClick={fetchTickets}
           className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm transition">
           <FiFilter /> Filter
         </button>
@@ -82,7 +106,9 @@ export default function Tickets() {
 
       <div className="bg-gray-800 border border-gray-700 rounded-2xl overflow-hidden">
         {loading ? (
-          <div className="flex justify-center py-16"><div className="animate-spin h-8 w-8 border-b-2 border-blue-500 rounded-full"></div></div>
+          <div className="flex justify-center py-16">
+            <div className="animate-spin h-8 w-8 border-b-2 border-blue-500 rounded-full"></div>
+          </div>
         ) : tickets.length === 0 ? (
           <div className="text-center py-16 text-gray-400">No tickets found</div>
         ) : (
@@ -90,8 +116,13 @@ export default function Tickets() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-700">
-                  {['Ticket ID','Title','Priority','Status','Assigned To','Created','Action'].map(h =>
-                    <th key={h} className="text-left text-gray-400 text-xs font-medium px-5 py-4 uppercase tracking-wide">{h}</th>)}
+                  <th className="text-left text-gray-400 text-xs font-medium px-5 py-4 uppercase tracking-wide">Ticket ID</th>
+                  <th className="text-left text-gray-400 text-xs font-medium px-5 py-4 uppercase tracking-wide">Title</th>
+                  <th className="text-left text-gray-400 text-xs font-medium px-5 py-4 uppercase tracking-wide">Priority</th>
+                  <th className="text-left text-gray-400 text-xs font-medium px-5 py-4 uppercase tracking-wide">Status</th>
+                  <th className="text-left text-gray-400 text-xs font-medium px-5 py-4 uppercase tracking-wide">Assigned To</th>
+                  <th className="text-left text-gray-400 text-xs font-medium px-5 py-4 uppercase tracking-wide">Created</th>
+                  <th className="text-left text-gray-400 text-xs font-medium px-5 py-4 uppercase tracking-wide">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -100,20 +131,24 @@ export default function Tickets() {
                     <td className="px-5 py-4 text-blue-400 font-mono text-sm">{t.ticketNumber}</td>
                     <td className="px-5 py-4 text-white text-sm max-w-xs truncate">{t.title}</td>
                     <td className="px-5 py-4">
-                      <span className={`text-xs px-2 py-1 rounded-full font-medium ${priorityColors[t.priority] || 'text-gray-400'}`>
-                        {t.priority?.replace('_',' ')}
+                      <span className={getPriorityClass(t.priority) + ' text-xs px-2 py-1 rounded-full font-medium'}>
+                        {t.priority ? t.priority.replace('_', ' ') : '—'}
                       </span>
                     </td>
                     <td className="px-5 py-4">
-                      <span className={`text-xs px-2 py-1 rounded-full font-medium ${statusColors[t.status] || 'text-gray-400'}`>
-                        {t.status?.replace('_',' ')}
+                      <span className={getStatusClass(t.status) + ' text-xs px-2 py-1 rounded-full font-medium'}>
+                        {t.status ? t.status.replace('_', ' ') : '—'}
                       </span>
                     </td>
                     <td className="px-5 py-4 text-gray-400 text-sm">{t.assignedToName || 'Unassigned'}</td>
-                    <td className="px-5 py-4 text-gray-400 text-sm">{t.createdAt ? new Date(t.createdAt).toLocaleDateString() : '—'}</td>
+                    <td className="px-5 py-4 text-gray-400 text-sm">
+                      {t.createdAt ? new Date(t.createdAt).toLocaleDateString() : '—'}
+                    </td>
                     <td className="px-5 py-4">
-                      <Link to={`/tickets/${t.id}`}
-                        className="text-blue-400 hover:text-blue-300 text-sm font-medium">View</Link>
+                      <Link to={'/tickets/' + t.id}
+                        className="text-blue-400 hover:text-blue-300 text-sm font-medium">
+                        View
+                      </Link>
                     </td>
                   </tr>
                 ))}
