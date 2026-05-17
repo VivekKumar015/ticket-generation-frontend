@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { getAdminDashboard } from '../api/axios';
 import StatCard from '../components/StatCard';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { FiTicket, FiAlertCircle, FiCheckCircle, FiClock, FiUsers, FiTrendingUp } from 'react-icons/fi';
+import { FiTag, FiAlertCircle, FiCheckCircle, FiClock, FiUsers, FiTrendingUp } from 'react-icons/fi';
 
 const COLORS = ['#3b82f6', '#f59e0b', '#10b981', '#ef4444', '#8b5cf6', '#06b6d4'];
 
@@ -43,7 +43,7 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
-        <StatCard title="Total Tickets" value={stats?.totalTickets} icon={FiTicket} color="blue" />
+        <StatCard title="Total Tickets" value={stats?.totalTickets} icon={FiTag} color="blue" />
         <StatCard title="Open Tickets" value={stats?.openTickets} icon={FiTrendingUp} color="orange" />
         <StatCard title="In Progress" value={stats?.inProgressTickets} icon={FiClock} color="yellow" />
         <StatCard title="Resolved" value={stats?.resolvedTickets} icon={FiCheckCircle} color="green" />

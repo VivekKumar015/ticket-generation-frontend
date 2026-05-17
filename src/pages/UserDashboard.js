@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getMyTickets } from '../api/axios';
 import StatCard from '../components/StatCard';
-import { FiTicket, FiClock, FiCheckCircle, FiPlus } from 'react-icons/fi';
+import { FiTag, FiClock, FiCheckCircle, FiPlus } from 'react-icons/fi';
 
 const statusColors = {
   OPEN: 'bg-blue-500/20 text-blue-400', IN_PROGRESS: 'bg-yellow-500/20 text-yellow-400',
@@ -32,7 +32,7 @@ export default function UserDashboard() {
         </Link>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <StatCard title="Total Tickets" value={tickets.length} icon={FiTicket} color="blue" />
+        <StatCard title="Total Tickets" value={tickets.length} icon={FiTag} color="blue" />
         <StatCard title="In Progress" value={tickets.filter(t => t.status === 'IN_PROGRESS').length} icon={FiClock} color="yellow" />
         <StatCard title="Resolved" value={tickets.filter(t => t.status === 'RESOLVED').length} icon={FiCheckCircle} color="green" />
       </div>

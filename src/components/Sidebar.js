@@ -1,13 +1,13 @@
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { FiHome, FiTicket, FiPlus, FiUsers, FiSettings, FiLogOut, FiBarChart2 } from 'react-icons/fi';
+import { FiHome, FiTag, FiPlus, FiUsers, FiSettings, FiLogOut, FiBarChart2 } from 'react-icons/fi';
 
 export default function Sidebar({ open, setOpen }) {
   const { user, logout, isAdmin, isEmployee } = useAuth();
 
   const navItems = [
     { to: isAdmin() ? '/admin' : isEmployee() ? '/employee' : '/user', icon: FiHome, label: 'Dashboard' },
-    { to: '/tickets', icon: FiTicket, label: 'All Tickets', show: isAdmin() || isEmployee() },
+    { to: '/tickets', icon: FiTag, label: 'All Tickets', show: isAdmin() || isEmployee() },
     { to: '/tickets/new', icon: FiPlus, label: 'New Ticket' },
     { to: '/admin', icon: FiBarChart2, label: 'Analytics', show: isAdmin() },
     { to: '/profile', icon: FiSettings, label: 'Profile' },
@@ -20,7 +20,7 @@ export default function Sidebar({ open, setOpen }) {
         <div className="p-6 border-b border-gray-700">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
-              <FiTicket color="white" size={20} />
+              <FiTag color="white" size={20} />
             </div>
             <div>
               <p className="font-bold text-white text-sm">TicketSystem</p>

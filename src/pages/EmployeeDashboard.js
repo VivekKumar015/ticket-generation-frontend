@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getAssignedTickets } from '../api/axios';
 import StatCard from '../components/StatCard';
-import { FiTicket, FiClock, FiCheckCircle, FiAlertCircle } from 'react-icons/fi';
+import { FiTag, FiClock, FiCheckCircle, FiAlertCircle } from 'react-icons/fi';
 
 const statusColors = {
   OPEN: 'bg-blue-500/20 text-blue-400', IN_PROGRESS: 'bg-yellow-500/20 text-yellow-400',
@@ -31,7 +31,7 @@ export default function EmployeeDashboard() {
         <p className="text-gray-400 text-sm mt-1">Manage and resolve your assigned tickets</p>
       </div>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <StatCard title="Total Assigned" value={tickets.length} icon={FiTicket} color="blue" />
+        <StatCard title="Total Assigned" value={tickets.length} icon={FiTag} color="blue" />
         <StatCard title="Open" value={open} icon={FiAlertCircle} color="orange" />
         <StatCard title="In Progress" value={inProgress} icon={FiClock} color="yellow" />
         <StatCard title="Resolved" value={resolved} icon={FiCheckCircle} color="green" />
