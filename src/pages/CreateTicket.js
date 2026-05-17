@@ -5,11 +5,13 @@ import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 
 export default function CreateTicket() {
-  const [form, setForm] = useState({
-    title: '', description: '', category: '',
-    priority: 'P3_MEDIUM', supportLevel: 'L1',
-    projectId: '', assignedToId: ''
-  });
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState('');
+  const [priority, setPriority] = useState('P3_MEDIUM');
+  const [supportLevel, setSupportLevel] = useState('L1');
+  const [projectId, setProjectId] = useState('');
+  const [assignedToId, setAssignedToId] = useState('');
   const [projects, setProjects] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -18,31 +20,34 @@ export default function CreateTicket() {
 
   useEffect(() => {
     getAllProjects().then(r => setProjects(r.data)).catch(() => {});
-    if (isAdmin()) getAllEmployees().then(r => setEmployees(r.data)).catch(() => {});
+    if (isAdmin()) {
+      getAllEmployees().then(r => setEmployees(r.data)).catch(() => {});
+    }
   }, []);
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); setLoading(true);
+    e.preventDefault();
+    setLoading(true);
     try {
-      const payload = { ...form };
-      if (!payload.projectId) delete payload.projectId;
-      if (!payload.assignedToId) delete payload.assignedToId;
-      else payload.assignedToId = Number(payload.assignedToId);
-      if (payload.projectId) payload.projectId = Number(payload.projectId);
+      const payload = {
+        title,
+        description,
+        category,
+        priority,
+        supportLevel
+      };
+      if (projectId) payload.projectId = Number(projectId);
+      if (assignedToId) payload.assignedToId = Number(assignedToId);
+
       await createTicket(payload);
       toast.success('Ticket created successfully!');
       navigate('/tickets');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to create ticket');
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   };
-
-  const Field = ({ label, children }) => (
-    <div>
-      <label className="block text-sm font-medium text-gray-300 mb-2">{label}</label>
-      {children}
-    </div>
-  );
 
   const inputClass = "w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-blue-500 transition text-sm";
 
@@ -55,73 +60,127 @@ export default function CreateTicket() {
 
       <div className="bg-gray-800 border border-gray-700 rounded-2xl p-8">
         <form onSubmit={handleSubmit} className="space-y-5">
-          <Field label="Issue Title *">
-            <input className={inputClass} required value={form.title}
-              onChange={e => setForm({...form, title: e.target.value})}
-              placeholder="Brief description of the issue" />
-          </Field>
 
-          <Field label="Description *">
-            <textarea className={inputClass} required rows={4} value={form.description}
-              onChange={e => setForm({...form, description: e.target.value})}
-              placeholder="Detailed description of the issue..." />
-          </Field>
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Issue Title *
+            </label>
+            <input
+              type="text"
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+              required
+              placeholder="Brief description of the issue"
+              className={inputClass}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Description *
+            </label>
+            <textarea
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+              required
+              rows={4}
+              placeholder="Detailed description of the issue..."
+              className={inputClass}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Category
+            </label>
+            <input
+              type="text"
+              value={category}
+              onChange={e => setCategory(e.target.value)}
+              placeholder="e.g. Bug, Feature, Support"
+              className={inputClass}
+            />
+          </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <Field label="Category">
-              <input className={inputClass} value={form.category}
-                onChange={e => setForm({...form, category: e.target.value})}
-                placeholder="e.g. Bug, Feature" />
-            </Field>
-            <Field label="Priority">
-              <select className={inputClass} value={form.priority}
-                onChange={e => setForm({...form, priority: e.target.value})}>
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Priority
+              </label>
+              <select
+                value={priority}
+                onChange={e => setPriority(e.target.value)}
+                className={inputClass}>
                 <option value="P1_CRITICAL">P1 - Critical</option>
                 <option value="P2_HIGH">P2 - High</option>
                 <option value="P3_MEDIUM">P3 - Medium</option>
                 <option value="P4_LOW">P4 - Low</option>
               </select>
-            </Field>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <Field label="Support Level">
-              <select className={inputClass} value={form.supportLevel}
-                onChange={e => setForm({...form, supportLevel: e.target.value})}>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Support Level
+              </label>
+              <select
+                value={supportLevel}
+                onChange={e => setSupportLevel(e.target.value)}
+                className={inputClass}>
                 <option value="L1">L1</option>
                 <option value="L2">L2</option>
                 <option value="L3">L3</option>
               </select>
-            </Field>
-            <Field label="Project">
-              <select className={inputClass} value={form.projectId}
-                onChange={e => setForm({...form, projectId: e.target.value})}>
-                <option value="">Select Project</option>
-                {projects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
-              </select>
-            </Field>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Project
+            </label>
+            <select
+              value={projectId}
+              onChange={e => setProjectId(e.target.value)}
+              className={inputClass}>
+              <option value="">Select Project</option>
+              {projects.map(p => (
+                <option key={p.id} value={p.id}>{p.name}</option>
+              ))}
+            </select>
           </div>
 
           {isAdmin() && (
-            <Field label="Assign To Employee">
-              <select className={inputClass} value={form.assignedToId}
-                onChange={e => setForm({...form, assignedToId: e.target.value})}>
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Assign To Employee
+              </label>
+              <select
+                value={assignedToId}
+                onChange={e => setAssignedToId(e.target.value)}
+                className={inputClass}>
                 <option value="">Unassigned</option>
-                {employees.map(e => <option key={e.id} value={e.id}>{e.firstName} {e.lastName}</option>)}
+                {employees.map(emp => (
+                  <option key={emp.id} value={emp.id}>
+                    {emp.firstName} {emp.lastName}
+                  </option>
+                ))}
               </select>
-            </Field>
+            </div>
           )}
 
           <div className="flex gap-3 pt-2">
-            <button type="button" onClick={() => navigate(-1)}
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
               className="flex-1 py-3 border border-gray-600 text-gray-300 hover:bg-gray-700 rounded-xl text-sm font-medium transition">
               Cancel
             </button>
-            <button type="submit" disabled={loading}
+            <button
+              type="submit"
+              disabled={loading}
               className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold rounded-xl text-sm transition">
               {loading ? 'Creating...' : 'Create Ticket'}
             </button>
           </div>
+
         </form>
       </div>
     </div>
