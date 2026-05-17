@@ -7,11 +7,12 @@ export default function StatCard({ title, value, icon: Icon, color = 'blue', sub
     purple: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
     orange: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
   };
+
   return (
     <div className="bg-gray-800 border border-gray-700 rounded-2xl p-6 hover:border-gray-600 transition">
       <div className="flex items-center justify-between mb-4">
         <p className="text-gray-400 text-sm font-medium">{title}</p>
-        <div className={`p-2 rounded-xl border ${colors[color]}`>
+        <div className={`p-2 rounded-xl border ${colors[color]}`}>
           <Icon size={20} />
         </div>
       </div>
