@@ -12,6 +12,8 @@ import Tickets from './pages/Tickets';
 import CreateTicket from './pages/CreateTicket';
 import TicketDetail from './pages/TicketDetail';
 import Profile from './pages/Profile';
+import Configuration from './pages/Configuration';
+import Reports from './pages/Reports';
 
 const DashboardRedirect = () => {
   const { user } = useAuth();
@@ -64,6 +66,18 @@ function App() {
 
           <Route path="/tickets/:id" element={
             <ProtectedRoute><Layout><TicketDetail /></Layout></ProtectedRoute>
+          } />
+
+          <Route path="/configuration" element={
+            <ProtectedRoute allowedRoles={['ROLE_SUPER_ADMIN']}>
+              <Layout><Configuration /></Layout>
+            </ProtectedRoute>
+          } />
+
+          <Route path="/reports" element={
+            <ProtectedRoute allowedRoles={['ROLE_SUPER_ADMIN']}>
+              <Layout><Reports /></Layout>
+            </ProtectedRoute>
           } />
 
           <Route path="/profile" element={

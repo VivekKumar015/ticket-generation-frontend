@@ -5,14 +5,12 @@ const API = axios.create({
   headers: { 'Content-Type': 'application/json' }
 });
 
-// Attach JWT token to every request automatically
 API.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
-// Handle 401 — auto logout if token expired
 API.interceptors.response.use(
   (res) => res,
   (err) => {
@@ -34,8 +32,10 @@ export const changePassword = (data) => API.post('/api/auth/change-password', da
 export const createTicket = (data) => API.post('/api/tickets', data);
 export const updateTicket = (id, data) => API.put(`/api/tickets/${id}`, data);
 export const getAllTickets = () => API.get('/api/tickets');
+export const getTicketById = (id) => API.get(`/api/tickets/${id}`);
 export const getMyTickets = () => API.get('/api/tickets/my');
 export const getAssignedTickets = () => API.get('/api/tickets/assigned');
+export const getTicketsByProject = (projectId) => API.get(`/api/tickets/project/${projectId}`);
 export const searchTickets = (params) => API.get('/api/tickets/search', { params });
 
 // ===== DASHBOARD =====
@@ -46,8 +46,32 @@ export const getMe = () => API.get('/api/users/me');
 export const getAllUsers = () => API.get('/api/users');
 export const getAllEmployees = () => API.get('/api/users/employees');
 
-// ===== PROJECTS =====
+// ===== PROJECTS (public list for ticket creation) =====
 export const getAllProjects = () => API.get('/api/projects');
+
+// ===== CONFIGURATION (admin only) =====
+export const configGetAllProjects = () => API.get('/api/config/projects');
+export const configCreateProject = (data) => API.post('/api/config/projects', data);
+export const configUpdateProject = (id, data) => API.put(`/api/config/projects/${id}`, data);
+export const configDeleteProject = (id) => API.delete(`/api/config/projects/${id}`);
+
+export const configGetAllShifts = () => API.get('/api/config/shifts');
+export const configCreateShift = (data) => API.post('/api/config/shifts', data);
+export const configUpdateShift = (id, data) => API.put(`/api/config/shifts/${id}`, data);
+
+export const configGetAllEmployees = () => API.get('/api/config/employees');
+export const configAssignEmployee = (data) => API.post('/api/config/employee-project', data);
+export const configRemoveEmployee = (userId, projectId) =>
+  API.delete(`/api/config/employee-project/${userId}/project/${projectId}`);
+export const configGetProjectEmployees = (projectId) =>
+  API.get(`/api/config/projects/${projectId}/employees`);
+export const configGetEmployeeProjects = (userId) =>
+  API.get(`/api/config/employees/${userId}/projects`);
+
+// ===== REPORTS =====
+export const getOverallReport = () => API.get('/api/reports/overall');
+export const getProjectWiseReport = () => API.get('/api/reports/projects');
+export const getProjectReport = (projectId) => API.get(`/api/reports/projects/${projectId}`);
 
 // ===== COMMENTS =====
 export const addComment = (ticketId, data) => API.post(`/api/tickets/${ticketId}/comments`, data);
