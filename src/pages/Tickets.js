@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { getAllTickets, getMyTickets, searchTickets } from '../api/axios';
 import { FiPlus, FiSearch, FiFilter } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
+import { getVisibleTickets, getTicketsByProject, searchTickets } from '../api/axios';
 
 const statusColors = {
   OPEN: 'bg-blue-500/20 text-blue-400',
@@ -28,28 +29,29 @@ export default function Tickets() {
   const [priority, setPriority] = useState('');
   const { isAdmin, isEmployee } = useAuth();
 
-  const fetchTickets = async () => {
-    setLoading(true);
-    try {
-      let res;
-      if (isAdmin() || isEmployee()) {
-        const params = {};
-        if (search) params.search = search;
-        if (status) params.status = status;
-        if (priority) params.priority = priority;
-        res = Object.keys(params).length
-          ? await searchTickets(params)
-          : await getAllTickets();
-      } else {
-        res = await getMyTickets();
-      }
-      setTickets(res.data);
-    } catch (err) {
-      console.error('Failed to fetch tickets', err);
-    } finally {
-      setLoading(false);
+const fetchTickets = async () => {
+  setLoading(true);
+  try {
+    let res;
+    if (search || status || priority) {
+      // Use search with filters
+      const params = {};
+      if (search) params.search = search;
+      if (status) params.status = status;
+      if (priority) params.priority = priority;
+      res = await searchTickets(params);
+    } else {
+      // Use role-based visibility endpoint
+      res = await getVisibleTickets();
     }
-  };
+    setTickets(res.data);
+  } catch (err) {
+    console.error('Failed to fetch tickets', err);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   useEffect(() => { fetchTickets(); }, []);
 

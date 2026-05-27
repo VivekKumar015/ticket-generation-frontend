@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { getAssignedTickets, getTicketsByProject } from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import { FiTag, FiClock, FiCheckCircle, FiAlertCircle } from 'react-icons/fi';
+import { getVisibleTickets, getTicketsByProject } from '../api/axios';
+
 
 const statusColors = {
   OPEN: 'bg-blue-500/20 text-blue-400',
@@ -29,22 +31,24 @@ export default function EmployeeDashboard() {
     loadTickets();
   }, [currentProject]);
 
-  const loadTickets = async () => {
-    setLoading(true);
-    try {
-      let res;
-      if (currentProject?.projectId) {
-        res = await getTicketsByProject(currentProject.projectId);
-      } else {
-        res = await getAssignedTickets();
-      }
-      setTickets(res.data);
-    } catch (err) {
-      console.error('Failed to load tickets', err);
-    } finally {
-      setLoading(false);
+const loadTickets = async () => {
+  setLoading(true);
+  try {
+    let res;
+    if (currentProject?.projectId) {
+      // If project switcher is active, show only that project's tickets
+      res = await getTicketsByProject(currentProject.projectId);
+    } else {
+      // Show all visible tickets based on assigned projects
+      res = await getVisibleTickets();
     }
-  };
+    setTickets(res.data);
+  } catch (err) {
+    console.error('Failed to load tickets', err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const open = tickets.filter(t => t.status === 'OPEN').length;
   const inProgress = tickets.filter(t => t.status === 'IN_PROGRESS').length;

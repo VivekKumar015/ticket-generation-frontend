@@ -76,5 +76,5 @@ export const getProjectReport = (projectId) => API.get(`/api/reports/projects/${
 // ===== COMMENTS =====
 export const addComment = (ticketId, data) => API.post(`/api/tickets/${ticketId}/comments`, data);
 export const getComments = (ticketId) => API.get(`/api/tickets/${ticketId}/comments`);
-
+export const getVisibleTickets = () => API.get('/api/tickets/my-visible');
 export default API;
