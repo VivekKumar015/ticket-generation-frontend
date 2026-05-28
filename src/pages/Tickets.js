@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { getAllTickets, getMyTickets, searchTickets } from '../api/axios';
 import { FiPlus, FiSearch, FiFilter } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
-import { getVisibleTickets, getTicketsByProject, searchTickets } from '../api/axios';
+import { getVisibleTickets, getTicketsByProject } from '../api/axios';
 
 const statusColors = {
   OPEN: 'bg-blue-500/20 text-blue-400',

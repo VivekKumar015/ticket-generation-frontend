@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { getAssignedTickets, getTicketsByProject } from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import { FiTag, FiClock, FiCheckCircle, FiAlertCircle } from 'react-icons/fi';
-import { getVisibleTickets, getTicketsByProject } from '../api/axios';
+import { getVisibleTickets } from '../api/axios';
 
 
 const statusColors = {
