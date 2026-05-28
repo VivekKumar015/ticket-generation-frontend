@@ -77,4 +77,11 @@ export const getProjectReport = (projectId) => API.get(`/api/reports/projects/${
 export const addComment = (ticketId, data) => API.post(`/api/tickets/${ticketId}/comments`, data);
 export const getComments = (ticketId) => API.get(`/api/tickets/${ticketId}/comments`);
 export const getVisibleTickets = () => API.get('/api/tickets/my-visible');
+
+// ===== CONFIGURATION — EMPLOYEE CRUD (add these new lines) =====
+export const configGetAllUsers = () => API.get('/api/config/users');
+export const configCreateEmployee = (data) => API.post('/api/config/employees/create', data);
+export const configUpdateEmployee = (id, data) => API.put(`/api/config/employees/${id}`, data);
+export const configDeleteEmployee = (id) => API.delete(`/api/config/employees/${id}`);
+export const configToggleEmployeeStatus = (id) => API.patch(`/api/config/employees/${id}/toggle-status`);
 export default API;
